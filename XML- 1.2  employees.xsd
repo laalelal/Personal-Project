@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="employees">
+        <xs:complexType>
+            <xs:sequence>
+
+                <xs:element name="employee" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+
+                            <xs:element name="personalInfo">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="firstName" type="xs:string"/>
+                                        <xs:element name="lastName" type="xs:string"/>
+                                        <xs:element name="dateOfBirth" type="xs:date"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+
+                            <xs:element name="employment">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="department" type="xs:string"/>
+                                        <xs:element name="designation" type="xs:string"/>
+
+                                        <xs:element name="salary">
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="xs:decimal">
+                                                        <xs:attribute name="currency" use="required"/>
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+
+                                        <xs:element name="joiningDate" type="xs:date"/>
+
+                                        <xs:element name="employmentType">
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:string">
+                                                    <xs:enumeration value="Full-Time"/>
+                                                    <xs:enumeration value="Part-Time"/>
+                                                    <xs:enumeration value="Contract"/>
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:element>
+
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+
+                            <xs:element name="contact">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="email" type="xs:string"/>
+                                        <xs:element name="phone" type="xs:string"/>
+
+                                        <xs:element name="address">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="street" type="xs:string"/>
+                                                    <xs:element name="city" type="xs:string"/>
+                                                    <xs:element name="state" type="xs:string"/>
+
+                                                    <xs:choice>
+                                                        <xs:element name="pincode" type="xs:string"/>
+                                                        <xs:element name="zipcode" type="xs:string"/>
+                                                    </xs:choice>
+
+                                                    <xs:element name="country" type="xs:string"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+
+                        </xs:sequence>
+
+                        <xs:attribute name="id" type="xs:ID" use="required"/>
+
+                    </xs:complexType>
+                </xs:element>
+
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
