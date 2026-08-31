@@ -1,0 +1,33 @@
+<!ELEMENT employees (employee+)>
+
+<!ELEMENT employee (personalInfo, employment, contact)>
+<!ATTLIST employee
+    id ID #REQUIRED
+>
+
+<!ELEMENT personalInfo (firstName, lastName, dateOfBirth)>
+<!ELEMENT firstName (#PCDATA)>
+<!ELEMENT lastName (#PCDATA)>
+<!ELEMENT dateOfBirth (#PCDATA)>
+
+<!ELEMENT employment (department, designation, salary, joiningDate, employmentType)>
+<!ELEMENT department (#PCDATA)>
+<!ELEMENT designation (#PCDATA)>
+<!ELEMENT salary (#PCDATA)>
+<!ATTLIST salary
+    currency CDATA #REQUIRED
+>
+<!ELEMENT joiningDate (#PCDATA)>
+<!ELEMENT employmentType (#PCDATA)>
+
+<!ELEMENT contact (email, phone, address)>
+<!ELEMENT email (#PCDATA)>
+<!ELEMENT phone (#PCDATA)>
+
+<!ELEMENT address (street, city, state, (pincode | zipcode), country)>
+<!ELEMENT street (#PCDATA)>
+<!ELEMENT city (#PCDATA)>
+<!ELEMENT state (#PCDATA)>
+<!ELEMENT pincode (#PCDATA)>
+<!ELEMENT zipcode (#PCDATA)>
+<!ELEMENT country (#PCDATA)>
