@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<employees xmlns:employee="http://example.com/employee">
+
+    <employee:employee id="EMP001">
+        <employee:personalInfo>
+            <employee:firstName>Rajesh</employee:firstName>
+            <employee:lastName>Kumar</employee:lastName>
+        </employee:personalInfo>
+
+        <employee:employment>
+            <employee:department>Engineering</employee:department>
+            <employee:salary currency="INR">850000</employee:salary>
+        </employee:employment>
+
+        <employee:contact>
+            <employee:email>rajesh.kumar@techcorp.com</employee:email>
+            <employee:address>
+                <employee:city>Mumbai</employee:city>
+                <employee:country>India</employee:country>
+            </employee:address>
+        </employee:contact>
+    </employee:employee>
+
+    <employee:employee id="EMP002">
+        <employee:personalInfo>
+            <employee:firstName>Amit</employee:firstName>
+            <employee:lastName>Sharma</employee:lastName>
+        </employee:personalInfo>
+
+        <employee:employment>
+            <employee:department>HR</employee:department>
+            <employee:salary currency="USD">70000</employee:salary>
+        </employee:employment>
+
+        <employee:contact>
+            <employee:email>amit.sharma@techcorp.com</employee:email>
+            <employee:address>
+                <employee:city>Delhi</employee:city>
+                <employee:country>India</employee:country>
+            </employee:address>
+        </employee:contact>
+    </employee:employee>
+
+    <employee:employee id="EMP003">
+        <employee:personalInfo>
+            <employee:firstName>Priya</employee:firstName>
+            <employee:lastName>Patel</employee:lastName>
+        </employee:personalInfo>
+
+        <employee:employment>
+            <employee:department>Finance</employee:department>
+            <employee:salary currency="INR">950000</employee:salary>
+        </employee:employment>
+
+        <employee:contact>
+            <employee:email>priya.patel@techcorp.com</employee:email>
+            <employee:address>
+                <employee:city>Pune</employee:city>
+                <employee:country>India</employee:country>
+            </employee:address>
+        </employee:contact>
+    </employee:employee>
+
+</employees>
