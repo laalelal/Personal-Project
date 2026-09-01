@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://example.com/employee"
+    xmlns:employee="http://example.com/employee"
+    elementFormDefault="qualified">
+
+    <xs:element name="employees">
+
+        <xs:complexType>
+
+            <xs:sequence>
+
+                <xs:element name="employee" maxOccurs="unbounded">
+
+                    <xs:complexType>
+
+                        <xs:sequence>
+
+                            <!-- Personal Information -->
+                            <xs:element name="personalInfo">
+
+                                <xs:complexType>
+
+                                    <xs:sequence>
+
+                                        <xs:element name="firstName" type="xs:string"/>
+
+                                        <xs:element name="lastName" type="xs:string"/>
+
+                                        <xs:element name="dateOfBirth" type="xs:date"/>
+
+                                    </xs:sequence>
+
+                                </xs:complexType>
+
+                            </xs:element>
+
+
+                            <!-- Employment Information -->
+                            <xs:element name="employment">
+
+                                <xs:complexType>
+
+                                    <xs:sequence>
+
+                                        <xs:element name="department" type="xs:string"/>
+
+                                        <xs:element name="designation" type="xs:string"/>
+
+                                        <xs:element name="salary" type="xs:decimal"/>
+
+                                        <xs:element name="joiningDate" type="xs:date"/>
+
+                                        <xs:element name="employmentType" type="xs:string"/>
+
+                                    </xs:sequence>
+
+                                </xs:complexType>
+
+                            </xs:element>
+
+
+                            <!-- Contact Information -->
+                            <xs:element name="contact">
+
+                                <xs:complexType>
+
+                                    <xs:sequence>
+
+                                        <xs:element name="email" type="xs:string"/>
+
+                                        <xs:element name="phone" type="xs:string"/>
+
+                                    </xs:sequence>
+
+                                </xs:complexType>
+
+                            </xs:element>
+
+                        </xs:sequence>
+
+
+                        <!-- Employee ID -->
+                        <xs:attribute
+                            name="id"
+                            type="xs:string"
+                            use="required"/>
+
+                    </xs:complexType>
+
+                </xs:element>
+
+            </xs:sequence>
+
+        </xs:complexType>
+
+    </xs:element>
+
+</xs:schema>
