@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<employees xmlns="http://example.com/employee">
+
+    <employee id="EMP001">
+
+        <personalInfo>
+            <firstName>Rajesh</firstName>
+            <lastName>Kumar</lastName>
+            <dateOfBirth>1995-06-15</dateOfBirth>
+        </personalInfo>
+
+        <employment>
+            <department>Engineering</department>
+            <designation>Software Engineer</designation>
+            <salary>850000</salary>
+            <joiningDate>2018-07-01</joiningDate>
+            <employmentType>Full-Time</employmentType>
+        </employment>
+
+        <contact>
+            <email>rajesh.kumar@techcorp.com</email>
+            <phone>9876543210</phone>
+        </contact>
+
+    </employee>
+
+
+    <employee id="EMP002">
+
+        <personalInfo>
+            <firstName>Amit</firstName>
+            <lastName>Sharma</lastName>
+            <dateOfBirth>1993-11-20</dateOfBirth>
+        </personalInfo>
+
+        <employment>
+            <department>HR</department>
+            <designation>HR Manager</designation>
+            <salary>70000</salary>
+            <joiningDate>2019-03-15</joiningDate>
+            <employmentType>Full-Time</employmentType>
+        </employment>
+
+        <contact>
+            <email>amit.sharma@techcorp.com</email>
+            <phone>9876543211</phone>
+        </contact>
+
+    </employee>
+
+
+    <employee id="EMP003">
+
+        <personalInfo>
+            <firstName>Priya</firstName>
+            <lastName>Patel</lastName>
+            <dateOfBirth>1997-02-10</dateOfBirth>
+        </personalInfo>
+
+        <employment>
+            <department>Finance</department>
+            <designation>Financial Analyst</designation>
+            <salary>950000</salary>
+            <joiningDate>2020-08-10</joiningDate>
+            <employmentType>Full-Time</employmentType>
+        </employment>
+
+        <contact>
+            <email>priya.patel@techcorp.com</email>
+            <phone>9876543212</phone>
+        </contact>
+
+    </employee>
+
+</employees>
