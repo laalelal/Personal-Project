@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE employees SYSTEM "employees.dtd">
+
+<employees>
+
+    <employee id="EMP001">
+
+        <personalInfo>
+            <firstName>Rajesh</firstName>
+            <lastName>Kumar</lastName>
+            <dateOfBirth>1995-06-15</dateOfBirth>
+        </personalInfo>
+
+        <employment>
+            <department>Engineering</department>
+            <designation>Software Engineer</designation>
+            <salary currency="INR">850000</salary>
+            <joiningDate>2018-07-01</joiningDate>
+            <employmentType>Full-Time</employmentType>
+        </employment>
+
+        <contact>
+            <email>rajesh.kumar@techcorp.com</email>
+            <phone>9876543210</phone>
+            <address>
+                <street>MG Road</street>
+                <city>Mumbai</city>
+                <state>Maharashtra</state>
+                <pincode>400001</pincode>
+                <country>India</country>
+            </address>
+        </contact>
+
+    </employee>
+
+</employees>
