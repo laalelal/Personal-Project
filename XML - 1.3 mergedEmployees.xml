@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mergedEmployees
+    xmlns:tc="http://techcorp.com/hr"
+    xmlns:hc="http://healthcare-inc.com/medical"
+    xmlns:fp="http://financepro.com/finance">
+
+    <!-- TechCorp employee -->
+    <tc:employee tc:id="TC001" tc:status="Active">
+        <tc:name>Rajesh Kumar</tc:name>
+        <tc:department>Engineering</tc:department>
+
+        <!-- HealthCare project inside TechCorp record -->
+        <hc:project hc:id="HC101">
+            <hc:name>Patient Care System</hc:name>
+            <hc:department>Cardiology</hc:department>
+        </hc:project>
+    </tc:employee>
+
+    <!-- HealthCare employee -->
+    <hc:employee hc:id="HC001" hc:status="Active">
+        <hc:name>Priya Sharma</hc:name>
+        <hc:department>Cardiology</hc:department>
+    </hc:employee>
+
+    <!-- FinancePro employee -->
+    <fp:employee fp:id="FP001" fp:status="Active">
+        <fp:name>Amit Singh</fp:name>
+        <fp:department>Finance</fp:department>
+        <fp:billingStatus>Billable</fp:billingStatus>
+    </fp:employee>
+
+</mergedEmployees>
