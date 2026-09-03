@@ -1,0 +1,1869 @@
+"use strict";
+
+/*
+=========================================================
+QUESTION 2.1
+INTRODUCTION TO JAVASCRIPT AND SYNTAX RULES
+=========================================================
+*/
+
+console.log("\n=================================================");
+console.log("QUESTION 2.1 - JAVASCRIPT SYNTAX AND VALIDATION");
+console.log("=================================================");
+
+const CONFIG = {
+    MAX_SALARY: 10000000,
+    MIN_SALARY: 100000,
+    REQUIRED_FIELDS: [
+        "firstName",
+        "lastName",
+        "email",
+        "department"
+    ],
+    EMAIL_PATTERN: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+};
+
+function validateEmployeeData(employee) {
+    const errors = [];
+    const warnings = [];
+
+    // Required field validation
+    for (const field of CONFIG.REQUIRED_FIELDS) {
+        if (
+            employee[field] === undefined ||
+            employee[field] === null ||
+            String(employee[field]).trim() === ""
+        ) {
+            errors.push(`${field} is required`);
+        }
+    }
+
+    // Email validation
+    if (
+        employee.email !== undefined &&
+        String(employee.email).trim() !== "" &&
+        !CONFIG.EMAIL_PATTERN.test(String(employee.email).trim())
+    ) {
+        errors.push("Invalid email format");
+    }
+
+    // Salary validation
+    if (employee.salary !== undefined && employee.salary !== null) {
+        const salary = Number(employee.salary);
+
+        if (Number.isNaN(salary)) {
+            errors.push("Salary must be a valid number");
+        } else {
+            if (salary < CONFIG.MIN_SALARY) {
+                warnings.push(
+                    `Salary is below minimum ${CONFIG.MIN_SALARY}`
+                );
+            }
+
+            if (salary > CONFIG.MAX_SALARY) {
+                errors.push(
+                    `Salary exceeds maximum ${CONFIG.MAX_SALARY}`
+                );
+            }
+        }
+    }
+
+    return {
+        isValid: errors.length === 0,
+        errors,
+        warnings
+    };
+}
+
+
+// Employee data
+const employeeData = {
+    firstName: "Amit",
+    lastName: "Kumar",
+    email: "amit@example.com",
+    department: "Engineering",
+    salary: 850000
+};
+
+console.log("\nCONFIG:", CONFIG);
+console.log("Valid employee:", validateEmployeeData(employeeData));
+
+
+// Missing first name
+console.log("\n--- Missing firstName Test ---");
+
+const missingFirstName = {
+    firstName: "",
+    lastName: "Kumar",
+    email: "amit@example.com",
+    department: "Engineering",
+    salary: 850000
+};
+
+console.log(validateEmployeeData(missingFirstName));
+
+
+// Invalid email
+console.log("\n--- Invalid Email Test ---");
+
+const invalidEmail = {
+    firstName: "Amit",
+    lastName: "Kumar",
+    email: "amit@",
+    department: "Engineering",
+    salary: 850000
+};
+
+console.log(validateEmployeeData(invalidEmail));
+
+
+// Low salary
+console.log("\n--- Low Salary Test ---");
+
+const lowSalaryEmployee = {
+    firstName: "Amit",
+    lastName: "Kumar",
+    email: "amit@example.com",
+    department: "Engineering",
+    salary: 90000
+};
+
+console.log(validateEmployeeData(lowSalaryEmployee));
+
+
+// High salary
+console.log("\n--- High Salary Test ---");
+
+const highSalaryEmployee = {
+    firstName: "Amit",
+    lastName: "Kumar",
+    email: "amit@example.com",
+    department: "Engineering",
+    salary: 12000000
+};
+
+console.log(validateEmployeeData(highSalaryEmployee));
+
+
+
+/*
+=========================================================
+QUESTION 2.2
+TYPE CONVERSIONS
+=========================================================
+*/
+
+console.log("\n=================================================");
+console.log("QUESTION 2.2 - TYPE CONVERSIONS");
+console.log("=================================================");
+
+
+// Numeric conversion
+function parseSalary(value) {
+    if (value === null || value === undefined) {
+        throw new Error("Salary is empty");
+    }
+
+    let cleaned = String(value)
+        .replace(/[₹$,]/g, "")
+        .trim();
+
+    // Remove USD text
+    cleaned = cleaned.replace(/^USD\s*/i, "");
+
+    if (cleaned === "") {
+        throw new Error("Salary is empty");
+    }
+
+    const numberValue = Number(cleaned);
+
+    if (!Number.isFinite(numberValue)) {
+        throw new Error(`Invalid salary value: ${value}`);
+    }
+
+    return numberValue;
+}
+
+
+// Date conversion
+function parseJoiningDate(value) {
+    if (value === null || value === undefined) {
+        throw new Error("Date is empty");
+    }
+
+    const text = String(value).trim();
+
+    if (text === "") {
+        throw new Error("Date is empty");
+    }
+
+    const date = new Date(text);
+
+    if (Number.isNaN(date.getTime())) {
+        throw new Error(`Invalid date: ${value}`);
+    }
+
+    return date;
+}
+
+
+// Boolean conversion
+function isActive(value) {
+    if (typeof value === "boolean") {
+        return value;
+    }
+
+    if (typeof value === "number") {
+        if (value === 1) return true;
+        if (value === 0) return false;
+    }
+
+    if (typeof value === "string") {
+        const text = value.trim().toLowerCase();
+
+        if (
+            text === "active" ||
+            text === "true" ||
+            text === "1"
+        ) {
+            return true;
+        }
+
+        if (
+            text === "inactive" ||
+            text === "false" ||
+            text === "0"
+        ) {
+            return false;
+        }
+    }
+
+    throw new Error(`Unsupported Boolean value: ${value}`);
+}
+
+
+// Type checking
+function checkType(value, expectedType) {
+    const actualType = typeof value;
+    const isArray = Array.isArray(value);
+
+    let actualValueType = actualType;
+
+    if (value === null) {
+        actualValueType = "null";
+    }
+
+    return {
+        actualType: actualValueType,
+        expectedType: expectedType,
+        isArray: isArray,
+        matches: actualValueType === expectedType
+    };
+}
+
+
+// Q2.2 tests
+console.log("\n--- parseSalary ---");
+
+const salaryTests = [
+    "₹8,50,000",
+    "720000",
+    "$95,000",
+    "USD 95000",
+    "0",
+    "-5000",
+    "",
+    "abc"
+];
+
+for (const value of salaryTests) {
+    try {
+        console.log(
+            value,
+            "=>",
+            parseSalary(value)
+        );
+    } catch (error) {
+        console.log(
+            value,
+            "=> ERROR:",
+            error.message
+        );
+    }
+}
+
+
+console.log("\n--- parseJoiningDate ---");
+
+const dateTests = [
+    "2018-07-01",
+    "01/07/2018",
+    "July 1, 2018",
+    "",
+    "invalid date"
+];
+
+for (const value of dateTests) {
+    try {
+        console.log(
+            value,
+            "=>",
+            parseJoiningDate(value)
+        );
+    } catch (error) {
+        console.log(
+            value,
+            "=> ERROR:",
+            error.message
+        );
+    }
+}
+
+
+console.log("\n--- isActive ---");
+
+const activeTests = [
+    "Active",
+    "active",
+    true,
+    1,
+    false,
+    0,
+    "inactive",
+    "unsupported"
+];
+
+for (const value of activeTests) {
+    try {
+        console.log(
+            value,
+            "=>",
+            isActive(value)
+        );
+    } catch (error) {
+        console.log(
+            value,
+            "=> ERROR:",
+            error.message
+        );
+    }
+}
+
+
+console.log("\n--- checkType ---");
+
+console.log(checkType("Amit", "string"));
+console.log(checkType(850000, "number"));
+console.log(checkType(true, "boolean"));
+console.log(checkType({}, "object"));
+console.log(checkType([], "object"));
+console.log(checkType(null, "null"));
+console.log(checkType(undefined, "undefined"));
+
+
+
+/*
+=========================================================
+QUESTION 2.3
+OBJECTS AND FUNCTIONS
+=========================================================
+*/
+
+console.log("\n=================================================");
+console.log("QUESTION 2.3 - OBJECTS AND FUNCTIONS");
+console.log("=================================================");
+
+
+const emp1 = {
+    id: "201",
+    firstName: "Amit",
+    lastName: "Kumar",
+    department: "Engineering",
+    salary: 1155000,
+    joiningDate: new Date("2021-06-15"),
+    isActive: true
+};
+
+
+// Read properties
+console.log("\nEmployee object:");
+console.log(emp1);
+
+console.log("Employee ID:", emp1.id);
+console.log("Employee Name:", emp1.firstName);
+console.log("Department:", emp1.department);
+console.log("Salary:", emp1.salary);
+
+
+// Update property
+emp1.salary = 1155000.000000002;
+
+console.log(
+    "Updated salary:",
+    emp1.salary
+);
+
+
+// Add property
+emp1.email = "amit@example.com";
+
+console.log(
+    "Added email:",
+    emp1.email
+);
+
+
+// Delete property
+delete emp1.email;
+
+console.log(
+    "After deleting email:",
+    emp1.email
+);
+
+
+// Property existence
+console.log(
+    "id exists:",
+    "id" in emp1
+);
+
+console.log(
+    "phone exists:",
+    "phone" in emp1
+);
+
+
+// Compensation function
+function calculateCompensation(employee) {
+    const bonus = employee.salary * 0.10;
+
+    return {
+        salary: employee.salary,
+        bonus: bonus,
+        totalCompensation: employee.salary + bonus
+    };
+}
+
+
+console.log(
+    "Compensation:",
+    calculateCompensation(emp1)
+);
+
+
+// Format name
+function formatEmployeeName(employee) {
+    return `${employee.firstName} ${employee.lastName}`.trim();
+}
+
+console.log(
+    "Formatted name:",
+    formatEmployeeName(emp1)
+);
+
+
+// Validate properties
+function validateEmployeeProperties(employee) {
+    return (
+        "id" in employee &&
+        "firstName" in employee &&
+        "lastName" in employee &&
+        "department" in employee &&
+        "salary" in employee
+    );
+}
+
+console.log(
+    "Employee properties valid:",
+    validateEmployeeProperties(emp1)
+);
+
+
+
+/*
+=========================================================
+QUESTION 2.4
+OPERATORS, COMPARISONS AND STRINGS
+=========================================================
+*/
+
+console.log("\n=================================================");
+console.log("QUESTION 2.4 - OPERATORS AND STRINGS");
+console.log("=================================================");
+
+
+// Arithmetic operators
+const bonus = emp1.salary * 0.10;
+const totalSalary = emp1.salary + bonus;
+
+console.log("\n--- Arithmetic ---");
+console.log("Salary:", emp1.salary);
+console.log("Bonus:", bonus);
+console.log("Total:", totalSalary);
+
+
+// Assignment
+let updatedSalary = emp1.salary;
+
+updatedSalary += 50000;
+
+console.log(
+    "After assignment update:",
+    updatedSalary
+);
+
+
+// Equality
+console.log("\n--- Equality ---");
+
+console.log(
+    "ID strict equality:",
+    emp1.id === "201"
+);
+
+console.log(
+    "ID loose equality:",
+    emp1.id == 201
+);
+
+
+// Relational operators
+console.log("\n--- Relational ---");
+
+console.log(
+    "Salary > 800000:",
+    emp1.salary > 800000
+);
+
+console.log(
+    "Salary < 800000:",
+    emp1.salary < 800000
+);
+
+
+// Logical operators
+console.log("\n--- Logical ---");
+
+console.log(
+    "Active AND Engineering:",
+    emp1.isActive === true &&
+    emp1.department === "Engineering"
+);
+
+console.log(
+    "Inactive OR Engineering:",
+    !emp1.isActive ||
+    emp1.department === "Engineering"
+);
+
+
+// NOT
+console.log(
+    "NOT inactive:",
+    !(!emp1.isActive)
+);
+
+
+// Ternary
+const higherEarner =
+    emp1.salary > 800000
+        ? "Higher Earner"
+        : "Regular Earner";
+
+console.log(
+    "Ternary result:",
+    higherEarner
+);
+
+
+// String concatenation
+const concatenatedName =
+    emp1.firstName + " " + emp1.lastName;
+
+console.log(
+    "Concatenated name:",
+    concatenatedName
+);
+
+
+// Template literal
+console.log(
+    `Employee ${emp1.fullName || concatenatedName} works in ${emp1.department}`
+);
+
+
+// String methods
+const nameWithSpaces = "  Amit Kumar  ";
+
+console.log(
+    "Trim:",
+    nameWithSpaces.trim()
+);
+
+console.log(
+    "Uppercase:",
+    nameWithSpaces.toUpperCase()
+);
+
+console.log(
+    "Lowercase:",
+    nameWithSpaces.toLowerCase()
+);
+
+console.log(
+    "Starts with Amit:",
+    nameWithSpaces.trim().startsWith("Amit")
+);
+
+console.log(
+    "Email includes @:",
+    "amit@example.com".includes("@")
+);
+
+
+// split / join
+const nameParts = "Amit Kumar".split(" ");
+
+console.log(
+    "Split:",
+    nameParts
+);
+
+console.log(
+    "Join:",
+    nameParts.join("-")
+);
+
+
+// Length
+console.log(
+    "Name length:",
+    "Amit Kumar".length
+);
+
+
+
+/*
+=========================================================
+QUESTION 2.5
+DATE AND TIME VALUES
+=========================================================
+*/
+
+console.log("\n=================================================");
+console.log("QUESTION 2.5 - DATE AND TIME");
+console.log("=================================================");
+
+
+const joiningDate = new Date("2021-06-15");
+
+console.log(
+    "Date object:",
+    joiningDate
+);
+
+console.log(
+    "Year:",
+    joiningDate.getFullYear()
+);
+
+console.log(
+    "Month:",
+    joiningDate.getMonth() + 1
+);
+
+console.log(
+    "Day:",
+    joiningDate.getDate()
+);
+
+
+// Format YYYY-MM-DD
+function formatDateYYYYMMDD(date) {
+    const year = date.getFullYear();
+
+    const month = String(
+        date.getMonth() + 1
+    ).padStart(2, "0");
+
+    const day = String(
+        date.getDate()
+    ).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+}
+
+console.log(
+    "Formatted joining date:",
+    formatDateYYYYMMDD(joiningDate)
+);
+
+
+// Validate date
+function isValidDate(date) {
+    return (
+        date instanceof Date &&
+        !Number.isNaN(date.getTime())
+    );
+}
+
+console.log(
+    "Valid joining date:",
+    isValidDate(joiningDate)
+);
+
+
+// Compare dates
+const earlierDate = new Date("2020-01-01");
+const laterDate = new Date("2022-01-01");
+
+console.log(
+    "Earlier date:",
+    earlierDate < laterDate
+);
+
+console.log(
+    "Later date:",
+    laterDate > earlierDate
+);
+
+
+// Years of service
+function calculateYearsOfService(date) {
+    const today = new Date();
+
+    let years =
+        today.getFullYear() -
+        date.getFullYear();
+
+    const monthDifference =
+        today.getMonth() -
+        date.getMonth();
+
+    if (
+        monthDifference < 0 ||
+        (
+            monthDifference === 0 &&
+            today.getDate() < date.getDate()
+        )
+    ) {
+        years--;
+    }
+
+    return years;
+}
+
+console.log(
+    "Years of service:",
+    calculateYearsOfService(joiningDate)
+);
+
+
+// Timestamps
+const createdAt = new Date();
+const updatedAt = new Date();
+
+console.log(
+    "Created At:",
+    createdAt.toISOString()
+);
+
+console.log(
+    "Updated At:",
+    updatedAt.toISOString()
+);
+
+
+
+/*
+=========================================================
+QUESTION 2.6
+ARRAYS, COLLECTIONS AND FLOW CONTROL
+=========================================================
+*/
+
+console.log("\n=================================================");
+console.log("QUESTION 2.6 - ARRAYS AND FLOW CONTROL");
+console.log("=================================================");
+
+
+const employees = [
+    {
+        id: "EMP001",
+        name: "Rajesh Kumar",
+        department: "Engineering",
+        salary: 850000,
+        active: true
+    },
+    {
+        id: "EMP002",
+        name: "Priya Sharma",
+        department: "Human Resources",
+        salary: 720000,
+        active: true
+    },
+    {
+        id: "EMP003",
+        name: "Michael Johnson",
+        department: "Sales",
+        salary: 950000,
+        active: false
+    },
+    {
+        id: "EMP004",
+        name: "Anita Desai",
+        department: "Engineering",
+        salary: 920000,
+        active: true
+    },
+    {
+        id: "EMP005",
+        name: "John Smith",
+        department: "Sales",
+        salary: 880000,
+        active: true
+    },
+    {
+        id: "EMP006",
+        name: "Lakshmi Reddy",
+        department: "Engineering",
+        salary: 680000,
+        active: true
+    }
+];
+
+
+// Array creation
+console.log("\nEmployees array:");
+console.log(employees);
+
+
+// Filter active employees
+const activeEmployees =
+    employees.filter(employee => employee.active);
+
+console.log(
+    "Active employees:",
+    activeEmployees
+);
+
+
+// Filter Engineering
+const engineeringEmployees =
+    employees.filter(
+        employee =>
+            employee.department === "Engineering"
+    );
+
+console.log(
+    "Engineering employees:",
+    engineeringEmployees
+);
+
+
+// Filter high earners
+const highEarners =
+    employees.filter(
+        employee =>
+            employee.salary > 800000
+    );
+
+console.log(
+    "High earners:",
+    highEarners
+);
+
+
+// Map names
+const employeeNames =
+    employees.map(
+        employee => employee.name
+    );
+
+console.log(
+    "Employee names:",
+    employeeNames
+);
+
+
+// Map bonus
+const employeeBonus =
+    employees.map(employee => ({
+        name: employee.name,
+        bonus: employee.salary * 0.10
+    }));
+
+console.log(
+    "Bonus:",
+    employeeBonus
+);
+
+
+// Reduce total salary
+const totalEmployeeSalary =
+    employees.reduce(
+        (total, employee) =>
+            total + employee.salary,
+        0
+    );
+
+console.log(
+    "Total salary:",
+    totalEmployeeSalary
+);
+
+
+// Reduce by department
+const salaryByDepartment =
+    employees.reduce(
+        (result, employee) => {
+
+            if (!result[employee.department]) {
+                result[employee.department] = 0;
+            }
+
+            result[employee.department] +=
+                employee.salary;
+
+            return result;
+
+        },
+        {}
+    );
+
+console.log(
+    "Salary by department:",
+    salaryByDepartment
+);
+
+
+// Find first employee salary > 800000
+const firstHighEarner =
+    employees.find(
+        employee =>
+            employee.salary > 800000
+    );
+
+console.log(
+    "First salary > 800000:",
+    firstHighEarner
+);
+
+
+// Some inactive
+const hasInactiveEmployee =
+    employees.some(
+        employee =>
+            employee.active === false
+    );
+
+console.log(
+    "Some inactive:",
+    hasInactiveEmployee
+);
+
+
+// Every salary > 50000
+const everySalaryAbove50000 =
+    employees.every(
+        employee =>
+            employee.salary > 50000
+    );
+
+console.log(
+    "Every salary > 50000:",
+    everySalaryAbove50000
+);
+
+
+// Sort salary descending
+const sortedBySalary =
+    [...employees].sort(
+        (a, b) =>
+            b.salary - a.salary
+    );
+
+console.log(
+    "Sorted salary descending:",
+    sortedBySalary
+);
+
+
+// Sort name ascending
+const sortedByName =
+    [...employees].sort(
+        (a, b) =>
+            a.name.localeCompare(b.name)
+    );
+
+console.log(
+    "Sorted name ascending:",
+    sortedByName
+);
+
+
+// for loop
+console.log("\n--- for loop ---");
+
+for (let i = 0; i < employees.length; i++) {
+    console.log(
+        i,
+        employees[i].id,
+        employees[i].name
+    );
+}
+
+
+// for...of
+console.log("\n--- for...of ---");
+
+for (const employee of employees) {
+    console.log(
+        employee.id,
+        employee.name
+    );
+}
+
+
+// for...in
+console.log("\n--- for...in ---");
+
+for (const key in employees[0]) {
+    console.log(
+        key,
+        ":",
+        employees[0][key]
+    );
+}
+
+
+// forEach
+console.log("\n--- forEach ---");
+
+employees.forEach(employee => {
+    console.log(
+        employee.name,
+        employee.department
+    );
+});
+
+
+// break / continue
+console.log("\n--- break / continue ---");
+
+for (const employee of employees) {
+
+    if (!employee.active) {
+        continue;
+    }
+
+    console.log(
+        "Processing:",
+        employee.name
+    );
+
+    if (employee.salary > 900000) {
+        break;
+    }
+}
+
+
+
+/*
+=========================================================
+QUESTION 2.7
+FUNCTIONS, CLASSES AND CONSTRUCTOR FUNCTIONS
+=========================================================
+*/
+
+console.log("\n=================================================");
+console.log("QUESTION 2.7 - CLASSES AND CONSTRUCTORS");
+console.log("=================================================");
+
+
+class Employee {
+
+    constructor(
+        id,
+        firstName,
+        lastName,
+        department,
+        salary,
+        joiningDate
+    ) {
+
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.department = department;
+        this.salary = salary;
+
+        this.joiningDate =
+            joiningDate instanceof Date
+                ? joiningDate
+                : new Date(joiningDate);
+
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
+    }
+
+
+    get fullName() {
+
+        return (
+            `${this.firstName} ${this.lastName}`
+        ).trim();
+    }
+
+
+    set fullName(value) {
+
+        const parts =
+            String(value)
+                .trim()
+                .split(/\s+/);
+
+        if (parts.length < 2) {
+            throw new Error(
+                "Full name must contain at least two name parts"
+            );
+        }
+
+        this.firstName = parts[0];
+
+        this.lastName =
+            parts.slice(1).join(" ");
+
+        this.updatedAt = new Date();
+    }
+
+
+    getYearsOfService() {
+
+        return calculateYearsOfService(
+            this.joiningDate
+        );
+    }
+
+
+    giveIncrement(percent) {
+
+        if (
+            typeof percent !== "number" ||
+            percent <= 0
+        ) {
+            throw new Error(
+                "Increment must be greater than 0"
+            );
+        }
+
+        if (percent > 50) {
+            throw new Error(
+                "Increment cannot exceed 50%"
+            );
+        }
+
+        this.salary +=
+            this.salary * percent / 100;
+
+        this.updatedAt = new Date();
+
+        return this.salary;
+    }
+
+
+    toXML() {
+
+        return `
+<Employee>
+    <id>${this.id}</id>
+    <firstName>${this.firstName}</firstName>
+    <lastName>${this.lastName}</lastName>
+    <department>${this.department}</department>
+    <salary>${this.salary}</salary>
+    <joiningDate>${this.joiningDate.toISOString()}</joiningDate>
+</Employee>`.trim();
+    }
+
+
+    toJSON() {
+
+        return {
+            id: this.id,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            fullName: this.fullName,
+            department: this.department,
+            salary: this.salary,
+            joiningDate:
+                this.joiningDate.toISOString(),
+            createdAt:
+                this.createdAt.toISOString(),
+            updatedAt:
+                this.updatedAt.toISOString()
+        };
+    }
+
+
+    static fromXML(xml) {
+
+        function getValue(tag) {
+
+            const regex =
+                new RegExp(
+                    `<${tag}>(.*?)</${tag}>`
+                );
+
+            const match =
+                xml.match(regex);
+
+            return match
+                ? match[1]
+                : "";
+        }
+
+        return new Employee(
+            getValue("id"),
+            getValue("firstName"),
+            getValue("lastName"),
+            getValue("department"),
+            Number(getValue("salary")),
+            getValue("joiningDate")
+        );
+    }
+}
+
+
+// Create employee using class
+const classEmployee =
+    new Employee(
+        "301",
+        "Ravi",
+        "Kumar",
+        "Engineering",
+        800000,
+        "2020-01-15"
+    );
+
+
+console.log(
+    "\nClass employee:",
+    classEmployee
+);
+
+console.log(
+    "Full name:",
+    classEmployee.fullName
+);
+
+console.log(
+    "Years of service:",
+    classEmployee.getYearsOfService()
+);
+
+
+// Increment
+try {
+
+    console.log(
+        "After 10% increment:",
+        classEmployee.giveIncrement(10)
+    );
+
+} catch (error) {
+
+    console.log(
+        "Increment error:",
+        error.message
+    );
+}
+
+
+// Invalid increments
+for (const percent of [0, 10, 50, 51]) {
+
+    try {
+
+        const testEmployee =
+            new Employee(
+                "T01",
+                "Test",
+                "Employee",
+                "HR",
+                500000,
+                "2022-01-01"
+            );
+
+        testEmployee.giveIncrement(percent);
+
+        console.log(
+            `${percent}% increment successful`
+        );
+
+    } catch (error) {
+
+        console.log(
+            `${percent}% increment error:`,
+            error.message
+        );
+    }
+}
+
+
+// Full name setter
+try {
+
+    classEmployee.fullName =
+        "Ravi Kumar Singh";
+
+    console.log(
+        "After fullName update:",
+        classEmployee.fullName
+    );
+
+} catch (error) {
+
+    console.log(
+        "Full name error:",
+        error.message
+    );
+}
+
+
+// One-word name test
+try {
+
+    classEmployee.fullName =
+        "Amit";
+
+} catch (error) {
+
+    console.log(
+        "One-word name error:",
+        error.message
+    );
+}
+
+
+// JSON
+console.log(
+    "Employee JSON object:",
+    classEmployee.toJSON()
+);
+
+console.log(
+    "JSON string:",
+    JSON.stringify(
+        classEmployee.toJSON()
+    )
+);
+
+
+// XML
+const employeeXML =
+    classEmployee.toXML();
+
+console.log(
+    "Employee XML:",
+    employeeXML
+);
+
+
+// XML to object
+const employeeFromXML =
+    Employee.fromXML(employeeXML);
+
+console.log(
+    "Employee created from XML:",
+    employeeFromXML
+);
+
+
+// Constructor function
+function EmployeeConstructor(
+    id,
+    firstName,
+    lastName,
+    department,
+    salary,
+    joiningDate
+) {
+
+    this.id = id;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.department = department;
+    this.salary = salary;
+
+    this.joiningDate =
+        joiningDate instanceof Date
+            ? joiningDate
+            : new Date(joiningDate);
+
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
+}
+
+
+// Prototype operation
+EmployeeConstructor.prototype.getFullName =
+    function () {
+
+        return (
+            `${this.firstName} ${this.lastName}`
+        ).trim();
+    };
+
+
+EmployeeConstructor.prototype.getSummary =
+    function () {
+
+        return `${this.getFullName()} - ${this.department}`;
+    };
+
+
+// Constructor-created employee
+const constructorEmployee =
+    new EmployeeConstructor(
+        "302",
+        "Neha",
+        "Sharma",
+        "Finance",
+        750000,
+        "2022-04-10"
+    );
+
+
+console.log(
+    "\nConstructor employee:",
+    constructorEmployee
+);
+
+console.log(
+    "Constructor full name:",
+    constructorEmployee.getFullName()
+);
+
+console.log(
+    "Constructor summary:",
+    constructorEmployee.getSummary()
+);
+
+
+
+/*
+=========================================================
+QUESTION 2.8
+GLOBAL OBJECT, CURRENT OBJECT AND OBJECT OPERATIONS
+=========================================================
+*/
+
+console.log("\n=================================================");
+console.log("QUESTION 2.8 - GLOBAL OBJECT");
+console.log("=================================================");
+
+
+// Global object
+const globalThisObject =
+    globalThis;
+
+console.log(
+    "Global object exists:",
+    typeof globalThisObject !== "undefined"
+);
+
+console.log(
+    "Global object type:",
+    typeof globalThisObject
+);
+
+console.log(
+    "Global console exists:",
+    typeof globalThisObject.console
+);
+
+console.log(
+    "Global JSON exists:",
+    typeof globalThisObject.JSON
+);
+
+console.log(
+    "Global Math exists:",
+    typeof globalThisObject.Math
+);
+
+console.log(
+    "Global setTimeout:",
+    typeof globalThisObject.setTimeout
+);
+
+
+// Some global properties
+console.log(
+    "Some global properties:",
+    Object.keys(globalThisObject).slice(0, 10)
+);
+
+
+// Global scope vs object scope
+console.log(
+    "\n=== GLOBAL SCOPE VS OBJECT SCOPE ==="
+);
+
+var runtimeVariable =
+    "Module Scope";
+
+globalThisObject.globalVariable =
+    "Global Object Property";
+
+console.log(
+    "runtimeVariable:",
+    runtimeVariable
+);
+
+console.log(
+    "globalThis.runtimeVariable:",
+    globalThisObject.runtimeVariable
+);
+
+console.log(
+    "globalThis.globalVariable:",
+    globalThisObject.globalVariable
+);
+
+
+// Node-specific runtime check
+console.log(
+    "\n=== NODE GLOBAL OBJECT ==="
+);
+
+console.log(
+    "global === globalThis:",
+    global === globalThis
+);
+
+console.log(
+    "window exists:",
+    typeof window !== "undefined"
+);
+
+
+// Current object / this
+console.log(
+    "\n=== CURRENT OBJECT (THIS) ==="
+);
+
+emp1.showContext =
+    function () {
+
+        console.log(
+            "Current object is employee:",
+            this.fullName
+        );
+
+        console.log(
+            "Current object ID:",
+            this.id
+        );
+
+        console.log(
+            "this === emp1:",
+            this === emp1
+        );
+    };
+
+
+emp1.showContext();
+
+
+// Property create and read
+console.log(
+    "\n=== PROPERTY CREATE AND READ ==="
+);
+
+
+// Create
+emp1.email =
+    "rahul@example.com";
+
+console.log(
+    "Created property email:",
+    emp1.email
+);
+
+
+// Read existing
+console.log(
+    "Read existing property id:",
+    emp1.id
+);
+
+
+// Read missing
+console.log(
+    "Read missing property phone:",
+    emp1.phone
+);
+
+
+// Property update and delete
+console.log(
+    "\n=== PROPERTY UPDATE AND DELETE ==="
+);
+
+
+emp1.email =
+    "amit@example.com";
+
+console.log(
+    "Updated email:",
+    emp1.email
+);
+
+
+// Delete
+delete emp1.email;
+
+console.log(
+    "After deletion:",
+    emp1.email
+);
+
+
+// Existence
+console.log(
+    "Email exists:",
+    "email" in emp1
+);
+
+
+// Property existence
+console.log(
+    "\n=== PROPERTY EXISTENCE ==="
+);
+
+console.log(
+    "id exists:",
+    "id" in emp1
+);
+
+console.log(
+    "salary exists:",
+    "salary" in emp1
+);
+
+console.log(
+    "phone exists:",
+    "phone" in emp1
+);
+
+
+// Own properties
+console.log(
+    "\n=== OWN PROPERTIES ==="
+);
+
+console.log(
+    "Employee own properties:",
+    Object.keys(emp1)
+);
+
+
+// Object.hasOwn
+console.log(
+    "Email is own property:",
+    Object.hasOwn(emp1, "email")
+);
+
+console.log(
+    "Salary is own property:",
+    Object.hasOwn(emp1, "salary")
+);
+
+
+// Inherited properties
+console.log(
+    "\n=== INHERITED PROPERTIES ==="
+);
+
+
+const employeePrototype = {
+
+    company: "Oracle",
+
+    getCompany() {
+        return this.company;
+    }
+};
+
+
+const inheritedEmployee =
+    Object.create(
+        employeePrototype
+    );
+
+
+inheritedEmployee.id =
+    "301";
+
+inheritedEmployee.name =
+    "Ravi Kumar";
+
+
+console.log(
+    "Own property name:",
+    inheritedEmployee.name
+);
+
+console.log(
+    "Inherited property company:",
+    inheritedEmployee.company
+);
+
+console.log(
+    "Own properties:",
+    Object.keys(inheritedEmployee)
+);
+
+console.log(
+    "Company exists using in:",
+    "company" in inheritedEmployee
+);
+
+console.log(
+    "Company is own property:",
+    Object.hasOwn(
+        inheritedEmployee,
+        "company"
+    )
+);
+
+
+// Object copy
+console.log(
+    "\n=== OBJECT COPY AND MERGE ==="
+);
+
+
+const employeeCopy =
+    Object.assign(
+        {},
+        emp1
+    );
+
+console.log(
+    "Copied employee:",
+    employeeCopy
+);
+
+
+// Additional data
+const additionalData = {
+
+    location: "Bangalore",
+
+    grade: "A"
+};
+
+
+// Merge
+const mergedEmployee =
+    Object.assign(
+        {},
+        employeeCopy,
+        additionalData
+    );
+
+
+console.log(
+    "Merged employee:",
+    mergedEmployee
+);
+
+
+// JSON conversion
+console.log(
+    "\n=== JSON CONVERSION ==="
+);
+
+
+const employeeObjectJSON =
+    emp1.toJSON
+        ? emp1.toJSON()
+        : {
+            ...emp1,
+            joiningDate:
+                emp1.joiningDate instanceof Date
+                    ? emp1.joiningDate.toISOString()
+                    : emp1.joiningDate,
+            createdAt:
+                emp1.createdAt instanceof Date
+                    ? emp1.createdAt.toISOString()
+                    : emp1.createdAt,
+            updatedAt:
+                emp1.updatedAt instanceof Date
+                    ? emp1.updatedAt.toISOString()
+                    : emp1.updatedAt
+        };
+
+
+console.log(
+    "Employee JSON object:",
+    employeeObjectJSON
+);
+
+console.log(
+    "JSON string:",
+    JSON.stringify(
+        employeeObjectJSON
+    )
+);
+
+
+// Final object state
+console.log(
+    "\n=== FINAL EMPLOYEE OBJECT STATE ==="
+);
+
+console.log(
+    "Employee:",
+    emp1
+);
+
+console.log(
+    "Employee ID:",
+    emp1.id
+);
+
+console.log(
+    "Employee Name:",
+    emp1.fullName
+);
+
+console.log(
+    "Employee Department:",
+    emp1.department
+);
+
+console.log(
+    "Employee Salary:",
+    emp1.salary
+);
+
+
+// Timestamp output
+console.log(
+    "After update - Created At:",
+    emp1.createdAt
+);
+
+console.log(
+    "After update - Updated At:",
+    emp1.updatedAt
+);
+
+
+console.log("\n=================================================");
+console.log("ALL QUESTION 2.1 TO 2.8 TESTS COMPLETED");
+console.log("=================================================");
